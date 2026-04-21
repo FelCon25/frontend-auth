@@ -1,113 +1,197 @@
-import { useState, type ComponentProps } from "react"
-
-import { Button } from "@/components/ui/button"
-import { registerSchema, type RegisterInput } from "../schemas/register.schema"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-type FormSubmitEvent = Parameters<NonNullable<ComponentProps<"form">["onSubmit"]>>[0]
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { registerSchema, type RegisterInput } from "../schemas/register.schema"
 
 export default function RegistrationForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [username, setUsername] = useState("")
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
-
-  const { register, handleSubmit } = useForm<RegisterInput>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
-
+    mode: "onBlur",
   })
+
+  const onSubmit = (data: RegisterInput) => {
+    console.log(data)
+  }
 
   return (
     <div className="flex min-h-svh items-center justify-center p-6">
-      <div className="w-full max-w-lg rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm">
-        <form className="grid gap-5" onSubmit={handleSubmit}>
-          <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
-            <p className="text-sm text-muted-foreground">Start by filling in your details.</p>
-          </div>
+      <div className="w-full max-w-lg border border-border bg-card p-6 text-card-foreground shadow-sm">
+        <form
+          className="space-y-3"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
+          <header className="space-y-1 mb-5">
+            <h1 className="text-2xl font-bold">
+              Create your account
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Start by filling in your details.
+            </p>
+          </header>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="firstName">First name</label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor="firstName" className="mb-1 block text-sm font-medium">
+                First name
+              </label>
               <input
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 id="firstName"
+                type="text"
                 placeholder="Mario"
-                type="text"
-                value={firstName}
-                onChange={(event) => setFirstName(event.target.value)}
+                aria-invalid={Boolean(errors.firstName)}
+                aria-describedby="firstName-error"
+                className={cn(
+                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                  errors.firstName
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : "border-input"
+                )}
+                {...register("firstName")}
               />
+              {errors.firstName && (
+                <p id="firstName-error" className="mt-1 text-xs leading-4 text-destructive">
+                  {errors.firstName.message}
+                </p>
+              )}
             </div>
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="lastName">Last name</label>
+
+            <div>
+              <label htmlFor="lastName" className="mb-1 block text-sm font-medium">
+                Last name
+              </label>
               <input
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 id="lastName"
-                placeholder="Rossi"
                 type="text"
-                value={lastName}
-                onChange={(event) => setLastName(event.target.value)}
+                placeholder="Rossi"
+                aria-invalid={Boolean(errors.lastName)}
+                aria-describedby="lastName-error"
+                className={cn(
+                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                  errors.lastName
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : "border-input"
+                )}
+                {...register("lastName")}
               />
+              {errors.lastName && (
+                <p id="lastName-error" className="mt-1 text-xs leading-4 text-destructive">
+                  {errors.lastName.message}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <label className="text-sm font-medium" htmlFor="username">Username</label>
+          <div>
+            <label htmlFor="username" className="mb-1 block text-sm font-medium">
+              Username
+            </label>
             <input
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
               id="username"
-              placeholder="mariorossi"
               type="text"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              placeholder="mariorossi"
+              aria-invalid={Boolean(errors.username)}
+              aria-describedby="username-error"
+              className={cn(
+                "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                errors.username
+                  ? "border-destructive focus-visible:ring-destructive"
+                  : "border-input"
+              )}
+              {...register("username")}
             />
+            {errors.username && (
+              <p id="username-error" className="mt-1 text-xs leading-4 text-destructive">
+                {errors.username.message}
+              </p>
+            )}
           </div>
 
-          <div className="grid gap-2">
-            <label className="text-sm font-medium" htmlFor="email">Email</label>
+          <div>
+            <label htmlFor="email" className="mb-1 block text-sm font-medium">
+              Email
+            </label>
             <input
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
               id="email"
-              placeholder="nome@esempio.com"
               type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              placeholder="nome@esempio.com"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby="email-error"
+              className={cn(
+                "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                errors.email
+                  ? "border-destructive focus-visible:ring-destructive"
+                  : "border-input"
+              )}
+              {...register("email")}
             />
+            {errors.email && (
+              <p id="email-error" className="mt-1 text-xs leading-4 text-destructive">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="password">Password</label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor="password" className="mb-1 block text-sm font-medium">
+                Password
+              </label>
               <input
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 id="password"
-                placeholder="••••••••"
                 type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                placeholder="********"
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby="password-error"
+                className={cn(
+                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                  errors.password
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : "border-input"
+                )}
+                {...register("password")}
               />
+              {errors.password && (
+                <p id="password-error" className="mt-1 text-xs leading-4 text-destructive">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
-            <div className="grid gap-2">
-              <label className="text-sm font-medium" htmlFor="confirmPassword">Confirm password</label>
+
+            <div>
+              <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium">
+                Confirm password
+              </label>
               <input
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                 id="confirmPassword"
-                placeholder="••••••••"
                 type="password"
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
+                placeholder="********"
+                aria-invalid={Boolean(errors.confirmPassword)}
+                aria-describedby="confirmPassword-error"
+                className={cn(
+                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                  errors.confirmPassword
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : "border-input"
+                )}
+                {...register("confirmPassword")}
               />
+              {errors.confirmPassword && (
+                <p id="confirmPassword-error" className="mt-1 text-xs leading-4 text-destructive">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
           </div>
 
-          <Button className="w-full hover:bg-primary/80 cursor-pointer" type="submit">
-            Create account
+          <Button className="mt-1 w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creating account..." : "Create account"}
           </Button>
         </form>
       </div>
