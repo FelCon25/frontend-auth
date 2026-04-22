@@ -1,200 +1,107 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
 import { registerSchema, type RegisterInput } from "../schemas/register.schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 
 export default function RegistrationForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
-    mode: "onBlur",
-  })
 
-  const onSubmit = (data: RegisterInput) => {
-    console.log(data)
-  }
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<RegisterInput>({
+        resolver: zodResolver(registerSchema),
+    });
 
-  return (
-    <div className="flex min-h-svh items-center justify-center p-6">
-      <div className="w-full max-w-lg border border-border bg-card p-6 text-card-foreground shadow-sm">
-        <form
-          className="space-y-3"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
-          <header className="space-y-1 mb-5">
-            <h1 className="text-2xl font-bold">
-              Create your account
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Start by filling in your details.
-            </p>
-          </header>
+    const onSubmit = (data: RegisterInput) => {
+        console.log(data);
+    }
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label htmlFor="firstName" className="mb-1 block text-sm font-medium">
-                First name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                placeholder="Mario"
-                aria-invalid={Boolean(errors.firstName)}
-                aria-describedby="firstName-error"
-                className={cn(
-                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                  errors.firstName
-                    ? "border-destructive focus-visible:ring-destructive"
-                    : "border-input"
-                )}
-                {...register("firstName")}
-              />
-              {errors.firstName && (
-                <p id="firstName-error" className="mt-1 text-xs leading-4 text-destructive">
-                  {errors.firstName.message}
-                </p>
-              )}
+
+    return (
+        <div className="flex min-h-svh justify-center items-center p-6">
+
+            <div className="border border-border w-full max-w-lg rounded-lg bg-card text-card-foreground shadow-sm">
+                <header className="w-full space-y-1 bg-muted rounded-t-lg p-6">
+                    <h1 className="text-2xl font-bold">
+                        Create your account
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                        Start by filling in your details.
+                    </p>
+                </header>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="p-6">
+                    {/* First Name and Last Name */}
+                    <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                        <div className="grid gap-1">
+                            <label htmlFor="firstName">First Name</label>
+                            <input className="border border-border rounded-sm p-2"
+                                id="firstName"
+                                type="text"
+                                placeholder="Mario"
+                                {...register("firstName")} />
+                        </div>
+                        <div className="grid gap-1">
+                            <label htmlFor="lastName">Last Name</label>
+                            <input className="border border-border rounded-sm p-2"
+                                id="lastName"
+                                type="text"
+                                placeholder="Rossi"
+                                {...register("lastName")} />
+                        </div>
+                    </div>
+                    {/* Email and Username */}
+                    <div className="grid gap-1 mb-4">
+                        <label htmlFor="email">Email</label>
+                        <input className="border border-border rounded-sm p-2"
+                            id="email"
+                            type="email"
+                            placeholder="mario.rossi@example.com"
+                            {...register("email")} />
+                    </div>
+                    <div className="grid gap-1 mb-4">
+                        <label htmlFor="username">Username</label>
+                        <input className="border border-border rounded-sm p-2"
+                            id="username"
+                            type="text"
+                            placeholder="mario.rossi"
+                            {...register("username")} />
+                    </div>
+                    {/* Password and Confirm Password */}
+                    <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                        <div className="grid gap-1">
+                            <label htmlFor="password">Password</label>
+                            <input className="border border-border rounded-sm p-2"
+                                id="password"
+                                type="password"
+                                placeholder="********"
+                                {...register("password")} />
+                        </div>
+                        <div className="grid gap-1">
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <input className="border border-border rounded-sm p-2"
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="********"
+                                {...register("confirmPassword")} />
+                        </div>
+                    </div>
+                    {/* Submit Button */}
+                    <Button type="submit" className="w-full rounded-sm mt-2">
+                        Create Account
+                    </Button>
+
+                    <footer className="mt-4">
+                        Already have an account?{" "}
+                        <a href="/login" className="text-primary font-medium hover:text-primary/80 transition-colors">
+                            Login
+                        </a>
+                    </footer>
+                </form>
+
             </div>
-
-            <div>
-              <label htmlFor="lastName" className="mb-1 block text-sm font-medium">
-                Last name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                placeholder="Rossi"
-                aria-invalid={Boolean(errors.lastName)}
-                aria-describedby="lastName-error"
-                className={cn(
-                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                  errors.lastName
-                    ? "border-destructive focus-visible:ring-destructive"
-                    : "border-input"
-                )}
-                {...register("lastName")}
-              />
-              {errors.lastName && (
-                <p id="lastName-error" className="mt-1 text-xs leading-4 text-destructive">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="username" className="mb-1 block text-sm font-medium">
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              placeholder="mariorossi"
-              aria-invalid={Boolean(errors.username)}
-              aria-describedby="username-error"
-              className={cn(
-                "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                errors.username
-                  ? "border-destructive focus-visible:ring-destructive"
-                  : "border-input"
-              )}
-              {...register("username")}
-            />
-            {errors.username && (
-              <p id="username-error" className="mt-1 text-xs leading-4 text-destructive">
-                {errors.username.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="nome@esempio.com"
-              aria-invalid={Boolean(errors.email)}
-              aria-describedby="email-error"
-              className={cn(
-                "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                errors.email
-                  ? "border-destructive focus-visible:ring-destructive"
-                  : "border-input"
-              )}
-              {...register("email")}
-            />
-            {errors.email && (
-              <p id="email-error" className="mt-1 text-xs leading-4 text-destructive">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label htmlFor="password" className="mb-1 block text-sm font-medium">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="********"
-                aria-invalid={Boolean(errors.password)}
-                aria-describedby="password-error"
-                className={cn(
-                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                  errors.password
-                    ? "border-destructive focus-visible:ring-destructive"
-                    : "border-input"
-                )}
-                {...register("password")}
-              />
-              {errors.password && (
-                <p id="password-error" className="mt-1 text-xs leading-4 text-destructive">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium">
-                Confirm password
-              </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="********"
-                aria-invalid={Boolean(errors.confirmPassword)}
-                aria-describedby="confirmPassword-error"
-                className={cn(
-                  "h-10 w-full border bg-background px-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                  errors.confirmPassword
-                    ? "border-destructive focus-visible:ring-destructive"
-                    : "border-input"
-                )}
-                {...register("confirmPassword")}
-              />
-              {errors.confirmPassword && (
-                <p id="confirmPassword-error" className="mt-1 text-xs leading-4 text-destructive">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <Button className="mt-1 w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Create account"}
-          </Button>
-        </form>
-      </div>
-    </div>
-  )
+        </div>
+    )
 }
